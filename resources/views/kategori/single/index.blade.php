@@ -20,30 +20,32 @@
 
                     <hr>
                     <h5>Master Item dengan Kategori Ini</h5>
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>Kode</th>
-                                <th>Nama</th>
-                                <th>Jenis</th>
-                                <th>Harga Beli</th>
-                                <th>Supplier</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @forelse($items as $mi)
-                            <tr>
-                                <td>{{$mi->kode}}</td>
-                                <td>{{$mi->nama}}</td>
-                                <td>{{$mi->jenis}}</td>
-                                <td>{{$mi->harga_beli}}</td>
-                                <td>{{$mi->supplier}}</td>
-                            </tr>
-                            @empty
-                            <tr><td colspan="5">Belum ada item.</td></tr>
-                            @endforelse
-                        </tbody>
-                    </table>
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Kode</th>
+                                    <th>Nama</th>
+                                    <th>Jenis</th>
+                                    <th>Harga Beli</th>
+                                    <th>Supplier</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse($items as $mi)
+                                <tr>
+                                    <td>{{$mi->kode}}</td>
+                                    <td>{{$mi->nama}}</td>
+                                    <td>{{$mi->jenis}}</td>
+                                    <td>{{$mi->harga_beli}}</td>
+                                    <td>{{$mi->supplier}}</td>
+                                </tr>
+                                @empty
+                                <tr><td colspan="5">Belum ada item.</td></tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>

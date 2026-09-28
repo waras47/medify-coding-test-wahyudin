@@ -50,12 +50,10 @@
 
     <div class="form-group">
         <label>Foto</label>
-        <input type="file" class="form-control" name="foto" accept="image/*">
-        @if(!empty($item->foto))
+        <input type="file" class="form-control" name="foto" accept="image/*" onchange="previewFoto(this)">
         <div class="mt-2">
-            <img src="{{ asset('storage/' . $item->foto) }}" width="150">
+            <img id="foto-preview" src="{{ !empty($item->foto) ? asset('storage/' . $item->foto) : '' }}" width="150" style="{{ empty($item->foto) ? 'display:none' : '' }}">
         </div>
-        @endif
     </div>
 
     <div class="form-group">
