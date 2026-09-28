@@ -1,4 +1,4 @@
-<form method="POST">
+<form method="POST" enctype="multipart/form-data">
     @csrf
     @if($method == 'edit')
     <div class="form-group">
@@ -31,7 +31,7 @@
             <option @if($selected == 'Bukulapuk') selected @endif>Bukulapuk</option>
             <option @if($selected == 'TokoBagas') selected @endif>TokoBagas</option>
             <option @if($selected == 'E Commurz') selected @endif>E Commurz</option>
-            <optio @if($selected == 'Blublu') selected @endif>Blublu</option>
+            <option @if($selected == 'Blublu') selected @endif>Blublu</option>
         </select>
     </div>
 
@@ -43,10 +43,29 @@
             <option @if($selected == 'Obat') selected @endif>Obat</option>
             <option @if($selected == 'Alkes') selected @endif>Alkes</option>
             <option @if($selected == 'Matkes') selected @endif>Matkes</option>
-            <optio @if($selected == 'Umum') selected @endif>Umum</option>
-            <optio @if($selected == 'ATK') selected @endif>ATK</option>
+            <option @if($selected == 'Umum') selected @endif>Umum</option>
+            <option @if($selected == 'ATK') selected @endif>ATK</option>
         </select>
     </div>
+
+    <div class="form-group">
+        <label>Foto</label>
+        <input type="file" class="form-control" name="foto" accept="image/*">
+        @if(!empty($item->foto))
+        <div class="mt-2">
+            <img src="{{ asset('storage/' . $item->foto) }}" width="150">
+        </div>
+        @endif
+    </div>
+
+    <div class="form-group">
+    <label>Kategori</label>
+    <select class="form-control" name="kategori[]" multiple>
+        @foreach($kategoris as $kat)
+        <option value="{{$kat->id}}" @if(in_array($kat->id, $selected_kategori)) selected @endif>{{$kat->nama}}</option>
+        @endforeach
+    </select>
+</div>
 
     <button class="btn btn-primary mt-3">Submit</button>
 

@@ -21,7 +21,7 @@
     })
 
     function getData(){
-        
+
         $('#loading-filter').show();
         var dataTableObj = $('#table').DataTable();
         var filter_kode = $('#filter-kode').val()
@@ -39,24 +39,32 @@
             success: function(results) {
                 var data = results.data
 
+                // $.each(data, function(index, item) {
+                //     array_temp = [];
+                //     var harga_jual = item.harga_beli + item.harga_beli * item.laba / 100;
+                //     harga_jual = Math.round(harga_jual)
+                //     var kode = item.kode;
+
+                //     var html = `<a href="{{url('master-items/view/')}}/` + kode + `" class="btn btn-primary">View</a>`
+
+                //     $.each(item, function(obj_name, obj_value) {
+                //         if (obj_name == 'laba') return false;
+                //         array_temp.push(obj_value)
+                //     })
+                //     array_temp.push(harga_jual)
+                //     array_temp.push(item.supplier)
+                //     array_temp.push(html)
+
+
+                //     dataTableObj.row.add(array_temp).draw(true);
+                // });
                 $.each(data, function(index, item) {
-                    array_temp = [];
-                    var harga_jual = item.harga_beli + item.harga_beli * item.laba / 100;
-                    harga_jual = Math.round(harga_jual)
-                    var kode = item.kode;
+                    var harga_jual = Math.round(item.harga_beli + item.harga_beli * item.laba / 100);
+                    var html = `<a href="{{url('master-items/view/')}}/` + item.kode + `" class="btn btn-primary">View</a>`;
+                    var foto_html = item.foto ? `<img src="{{ asset('storage') }}/` + item.foto + `" width="60">` : '-';
 
-                    var html = `<a href="{{url('master-items/view/')}}/` + kode + `" class="btn btn-primary">View</a>`
-
-                    $.each(item, function(obj_name, obj_value) {
-                        if (obj_name == 'laba') return false;
-                        array_temp.push(obj_value)
-                    })
-                    array_temp.push(harga_jual)
-                    array_temp.push(item.supplier)
-                    array_temp.push(html)
-
-
-                    dataTableObj.row.add(array_temp).draw(true);
+                    var row = [item.kode, item.nama, item.jenis, item.harga_beli, harga_jual, item.supplier, foto_html, html];
+                    dataTableObj.row.add(row).draw(true);
                 });
                 $('#loading-filter').hide();
             },

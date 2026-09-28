@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\MasterItem;
+use App\Models\Kategori;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Storage;
 class MasterItemsController extends Controller
 {
     public function index()
@@ -23,9 +24,11 @@ class MasterItemsController extends Controller
 
         if (!empty($kode)) $data_search = $data_search->where('kode', $kode);
         if (!empty($nama)) $data_search = $data_search->where('nama', 'LIKE', '%' . $nama . '%');
-        if (!empty($hargamin)) $data_search = $data_search->where('harga_beli', '>=', $hargamin)->where('harga_beli', '<=', $hargamax);
+        if (!empty($hargamin)) $data_search = $data_search->where('harga_beli', '>=', $hargamin);
+        if (!empty($hargamax)) $data_search = $data_search->where('harga_beli', '<=', $hargamax);
 
-        $data_search = $data_search->select('kode', 'nama', 'jenis', 'harga_beli', 'laba', 'supplier')->orderBy('id')->get();
+
+        $data_search = $data_search->select('kode', 'nama', 'jenis', 'harga_beli', 'laba', 'supplier', 'foto')->orderBy('id')->get();
 
 
         return json_encode([
@@ -38,11 +41,15 @@ class MasterItemsController extends Controller
     {
         if ($method == 'new') {
             $item = [];
+            $selected_kategori = [];
         } else {
             $item = MasterItem::find($id);
+            $selected_kategori = $item->kategoris->pluck('id')->toArray();
         }
         $data['item'] = $item;
         $data['method'] = $method;
+        $data['kategoris'] = Kategori::orderBy('nama')->get();
+        $data['selected_kategori'] = $selected_kategori;
         return view('master_items.form.index', $data);
     }
 
@@ -71,7 +78,14 @@ class MasterItemsController extends Controller
         $data_item->kode = $kode;
         $data_item->supplier = $request->supplier;
         $data_item->jenis = $request->jenis;
+        if ($request->hasFile('foto')) {
+            if (!empty($data_item->foto)) {
+                Storage::disk('public')->delete($data_item->foto);
+            }
+            $data_item->foto = $request->file('foto')->store('master_items', 'public');
+        }
         $data_item->save();
+        $data_item->kategoris()->sync($request->kategori ?? []);
 
         return redirect('master-items');
     }
@@ -80,6 +94,18 @@ class MasterItemsController extends Controller
     {
         MasterItem::find($id)->delete();
         return redirect('master-items');
+    }
+
+    public function exportExcel()
+    {
+        $items = MasterItem::with('kategoris')->orderBy('id')->get();
+
+        $html = view('master_items.index.excel', ['items' => $items])->render();
+
+        return response($html, 200, [
+            'Content-Type' => 'application/vnd.ms-excel',
+            'Content-Disposition' => 'attachment; filename="master-items.xls"',
+        ]);
     }
 
     public function updateRandomData()

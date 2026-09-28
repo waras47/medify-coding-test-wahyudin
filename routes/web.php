@@ -19,6 +19,7 @@ Route::get('/', function () {
 
 Auth::routes();
 
+// ====Master Items Routes========
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/master-items', [App\Http\Controllers\MasterItemsController::class, 'index']);
@@ -31,3 +32,14 @@ Route::get('/master-items/delete/{id}', [App\Http\Controllers\MasterItemsControl
 
 
 Route::get('/master-items/update-random-data', [App\Http\Controllers\MasterItemsController::class, 'updateRandomData']);
+
+// ====Kategori Routes========
+Route::get('/kategori', [App\Http\Controllers\KategoriController::class, 'index']);
+Route::get('/kategori/search', [App\Http\Controllers\KategoriController::class, 'search']);
+Route::get('/kategori/form/{method}/{id?}', [App\Http\Controllers\KategoriController::class, 'formView']);
+Route::post('/kategori/form/{method}/{id?}', [App\Http\Controllers\KategoriController::class, 'formSubmit']);
+Route::get('/kategori/view/{kode}', [App\Http\Controllers\KategoriController::class, 'singleView']);
+Route::get('/kategori/delete/{id}', [App\Http\Controllers\KategoriController::class, 'delete']);
+Route::get('/kategori/export-pdf/{kode}', [App\Http\Controllers\KategoriController::class, 'exportPdf']);
+
+Route::get('/master-items/export-excel', [App\Http\Controllers\MasterItemsController::class, 'exportExcel']);
